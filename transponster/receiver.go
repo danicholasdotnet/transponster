@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"log"
 	"reflect"
+
+	"github.com/gorilla/mux"
 )
 
 func (io IO) LogRequest() {
@@ -38,4 +40,8 @@ func (io IO) RequestToStruct(i interface{}) error {
 	}
 
 	return nil
+}
+
+func (io IO) Params() map[string]string {
+	return mux.Vars(io.R)
 }
