@@ -8,8 +8,8 @@ import (
 )
 
 type IO struct {
-	r *http.Request
-	w http.ResponseWriter
+	R *http.Request
+	W http.ResponseWriter
 }
 
 func Details(r *http.Request) string {
@@ -23,8 +23,8 @@ func (io IO) Success(i interface{}) {
 		return
 	}
 
-	io.w.Header().Set("Content-Type", "application/json")
-	_, err = io.w.Write(b)
+	io.W.Header().Set("Content-Type", "application/json")
+	_, err = io.W.Write(b)
 	if err != nil {
 		io.E500(fmt.Errorf("response writing failed: %v", err))
 		return
@@ -32,16 +32,16 @@ func (io IO) Success(i interface{}) {
 }
 
 func (io IO) E400(err error, msg string) {
-	log.Println("400 Returned For Following Request: ", Details(io.r))
+	log.Println("400 Returned For Following Request: ", Details(io.R))
 	log.Println(msg)
 	log.Println(err)
 	if msg == "" {
 		msg = "Bad Request"
 	}
-	http.Error(io.w, msg, http.StatusBadRequest)
+	http.Error(io.W, msg, http.StatusBadRequest)
 }
 func (io IO) E500(e error) {
-	log.Println("500 Returned For Following Request: ", Details(io.r))
+	log.Println("500 Returned For Following Request: ", Details(io.R))
 	log.Println(e)
-	http.Error(io.w, "Internal Server Error", http.StatusInternalServerError)
+	http.Error(io.W, "Internal Server Error", http.StatusInternalServerError)
 }
