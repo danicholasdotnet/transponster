@@ -10,6 +10,18 @@ type IO struct {
 	W http.ResponseWriter
 }
 
-func Details(r *http.Request) string {
-	return fmt.Sprintf(r.Method, r.URL, r.UserAgent(), r.RemoteAddr)
+type Detail struct {
+	method string
+	url    string
+	ua     string
+	src    string
+}
+
+func GetDetail(r *http.Request) string {
+	return fmt.Sprintf("%+v", Detail{
+		method: r.Method,
+		url:    r.URL.Path,
+		ua:     r.UserAgent(),
+		src:    r.RemoteAddr,
+	})
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func LogCodeAndRequest(code int, request *http.Request) {
-	log.Println("[", code, "] --> { ", Details(request), " }")
+	log.Println("[", code, "] --> { ", GetDetail(request), " }")
 }
 
 func (io IO) Success(i interface{}) {

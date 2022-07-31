@@ -9,7 +9,7 @@ import (
 )
 
 func (io IO) LogRequest() {
-	log.Println("Incoming: { ", Details(io.R), " }")
+	log.Println("Incoming: { ", GetDetail(io.R), " }")
 }
 
 func (io IO) RequestToStruct(i interface{}) error {
