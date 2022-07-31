@@ -1,4 +1,4 @@
-package responder
+package transponster
 
 import (
 	"encoding/json"
@@ -6,15 +6,6 @@ import (
 	"log"
 	"net/http"
 )
-
-type IO struct {
-	R *http.Request
-	W http.ResponseWriter
-}
-
-func Details(r *http.Request) string {
-	return fmt.Sprintf(r.Method, r.URL, r.UserAgent(), r.RemoteAddr)
-}
 
 func LogCodeAndRequest(code int, request *http.Request) {
 	log.Println("[", code, "] --> { ", Details(request), " }")
