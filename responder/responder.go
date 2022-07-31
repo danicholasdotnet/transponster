@@ -49,10 +49,9 @@ func (io IO) E400(err error, msg string) {
 	http.Error(io.W, msg, code)
 }
 
-func (io IO) E404(e error) {
+func (io IO) E404() {
 	code := http.StatusNotFound
 	LogCodeAndRequest(code, io.R)
-	log.Println(e)
 	http.Error(io.W, "Not Found", code)
 }
 
@@ -63,9 +62,8 @@ func (io IO) E500(e error) {
 	http.Error(io.W, "Internal Server Error", code)
 }
 
-func (io IO) E501(e error) {
+func (io IO) E501() {
 	code := http.StatusNotImplemented
 	LogCodeAndRequest(code, io.R)
-	log.Println(e)
 	http.Error(io.W, "Not Yet Implemented", code)
 }
