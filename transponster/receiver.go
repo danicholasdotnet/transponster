@@ -27,15 +27,7 @@ func (io IO) RequestToStruct(i interface{}) error {
 		var prettyJSON bytes.Buffer
 		json.Indent(&prettyJSON, b, "", "\t")
 		log.Println("JSON: ", &prettyJSON)
-		return err
-	}
-	decoder := json.NewDecoder(io.R.Body)
-	if err := decoder.Decode(i); err != nil {
-		log.Println("Error decoding request body to struct.")
-		var prettyJSON bytes.Buffer
-		json.Indent(&prettyJSON, b, "", "\t")
-		log.Println("Source: ", &prettyJSON)
-		log.Println("Destination: ", reflect.TypeOf(i))
+		log.Println("Struct: ", reflect.TypeOf(i))
 		return err
 	}
 
