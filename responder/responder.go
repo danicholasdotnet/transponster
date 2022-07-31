@@ -16,6 +16,10 @@ func Details(r *http.Request) string {
 	return fmt.Sprintf(r.Method, r.URL, r.UserAgent(), r.RemoteAddr)
 }
 
+func LogCodeAndRequest(code int, request *http.Request) {
+	log.Println("[", code, "] --> { ", Details(request), " }")
+}
+
 func (io IO) Success(i interface{}) {
 	b, err := json.Marshal(i)
 	if err != nil {
@@ -29,19 +33,39 @@ func (io IO) Success(i interface{}) {
 		io.E500(fmt.Errorf("response writing failed: %v", err))
 		return
 	}
+
+	LogCodeAndRequest(http.StatusOK, io.R)
 }
 
 func (io IO) E400(err error, msg string) {
-	log.Println("400 Returned For Following Request: ", Details(io.R))
-	log.Println(msg)
-	log.Println(err)
 	if msg == "" {
 		msg = "Bad Request"
 	}
-	http.Error(io.W, msg, http.StatusBadRequest)
+
+	code := http.StatusBadRequest
+	LogCodeAndRequest(code, io.R)
+	log.Println(msg)
+	log.Println(err)
+	http.Error(io.W, msg, code)
 }
-func (io IO) E500(e error) {
-	log.Println("500 Returned For Following Request: ", Details(io.R))
+
+func (io IO) E404(e error) {
+	code := http.StatusNotFound
+	LogCodeAndRequest(code, io.R)
 	log.Println(e)
-	http.Error(io.W, "Internal Server Error", http.StatusInternalServerError)
+	http.Error(io.W, "Not Found", code)
+}
+
+func (io IO) E500(e error) {
+	code := http.StatusInternalServerError
+	LogCodeAndRequest(code, io.R)
+	log.Println(e)
+	http.Error(io.W, "Internal Server Error", code)
+}
+
+func (io IO) E501(e error) {
+	code := http.StatusNotImplemented
+	LogCodeAndRequest(code, io.R)
+	log.Println(e)
+	http.Error(io.W, "Not Yet Implemented", code)
 }
