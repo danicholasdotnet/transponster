@@ -3,6 +3,7 @@ package transponster
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"reflect"
@@ -36,4 +37,26 @@ func (io IO) RequestToStruct(i interface{}) error {
 
 func (io IO) Params() map[string]string {
 	return mux.Vars(io.R)
+}
+
+func (io IO) ContextInt(key string) (*int, error) {
+	value := io.R.Context().Value(key)
+
+	number, ok := value.(int)
+	if !ok {
+		return nil, fmt.Errorf("value in context was not an int")
+	}
+
+	return &number, nil
+}
+
+func (io IO) ContextStrSlice(key string) (*[]string, error) {
+	value := io.R.Context().Value(key)
+
+	slice, ok := value.([]string)
+	if !ok {
+		return nil, fmt.Errorf("value in context was not a string slice")
+	}
+
+	return &slice, nil
 }
