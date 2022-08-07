@@ -1,4 +1,4 @@
-module github.com/lumosnox7/go-utils
+module github.com/lumosnox7/transponster
 
 go 1.18
 
