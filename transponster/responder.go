@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
-func LogCodeAndRequest(code int, request *http.Request) {
-	log.Println("[", code, "] --> { ", GetDetail(request), " }")
+func (io IO) logOutgoing(code int) {
+	elapsed := time.Since(io.start).Milliseconds()
+	log.Printf("OUTGOING[%v]: %v took %vms\n", io.id, code, elapsed)
 }
 
 func (io IO) Success(i interface{}) {
@@ -25,7 +27,7 @@ func (io IO) Success(i interface{}) {
 		return
 	}
 
-	LogCodeAndRequest(http.StatusOK, io.R)
+	io.logOutgoing(http.StatusOK)
 }
 
 func (io IO) E400(err error, msg string) {
@@ -34,7 +36,7 @@ func (io IO) E400(err error, msg string) {
 	}
 
 	code := http.StatusBadRequest
-	LogCodeAndRequest(code, io.R)
+	io.logOutgoing(code)
 	log.Println(msg)
 	log.Println(err)
 	http.Error(io.W, msg, code)
@@ -42,31 +44,31 @@ func (io IO) E400(err error, msg string) {
 
 func (io IO) E401() {
 	code := http.StatusUnauthorized
-	LogCodeAndRequest(code, io.R)
+	io.logOutgoing(code)
 	http.Error(io.W, "Unauthenticated", code)
 }
 
 func (io IO) E403() {
 	code := http.StatusForbidden
-	LogCodeAndRequest(code, io.R)
+	io.logOutgoing(code)
 	http.Error(io.W, "Unauthorised", code)
 }
 
 func (io IO) E404() {
 	code := http.StatusNotFound
-	LogCodeAndRequest(code, io.R)
+	io.logOutgoing(code)
 	http.Error(io.W, "Not Found", code)
 }
 
 func (io IO) E500(e error) {
 	code := http.StatusInternalServerError
-	LogCodeAndRequest(code, io.R)
+	io.logOutgoing(code)
 	log.Println(e)
 	http.Error(io.W, "Internal Server Error", code)
 }
 
 func (io IO) E501() {
 	code := http.StatusNotImplemented
-	LogCodeAndRequest(code, io.R)
+	io.logOutgoing(code)
 	http.Error(io.W, "Not Yet Implemented", code)
 }

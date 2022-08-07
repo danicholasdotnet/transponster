@@ -10,8 +10,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (io IO) LogRequest() {
-	log.Println("Incoming: { ", GetDetail(io.R), " }")
+func (io IO) logIncoming() {
+	log.Printf("INCOMING[%v]: %v\n", io.id, io.R)
 }
 
 func (io IO) RequestToStruct(i interface{}) error {
