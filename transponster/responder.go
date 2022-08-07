@@ -40,6 +40,18 @@ func (io IO) E400(err error, msg string) {
 	http.Error(io.W, msg, code)
 }
 
+func (io IO) E401() {
+	code := http.StatusUnauthorized
+	LogCodeAndRequest(code, io.R)
+	http.Error(io.W, "Unauthenticated", code)
+}
+
+func (io IO) E403() {
+	code := http.StatusForbidden
+	LogCodeAndRequest(code, io.R)
+	http.Error(io.W, "Unauthorised", code)
+}
+
 func (io IO) E404() {
 	code := http.StatusNotFound
 	LogCodeAndRequest(code, io.R)
