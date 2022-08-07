@@ -35,8 +35,15 @@ func (io IO) RequestToStruct(i interface{}) error {
 	return nil
 }
 
-func (io IO) Params() map[string]string {
-	return mux.Vars(io.R)
+func (io IO) Params(param string) (*string, error) {
+	params := mux.Vars(io.R)
+
+	val, ok := params[param]
+	if !ok {
+		return nil, fmt.Errorf("param does not exist")
+	}
+
+	return &val, nil
 }
 
 func (io IO) ContextInt(key string) (*int, error) {
