@@ -1,7 +1,6 @@
 package transponster
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 	"time"
@@ -25,20 +24,4 @@ func NewIO(w http.ResponseWriter, r *http.Request) IO {
 	io.logIncoming()
 
 	return io
-}
-
-type detail struct {
-	method string
-	url    string
-	ua     string
-	src    string
-}
-
-func getDetail(r *http.Request) string {
-	return fmt.Sprintf("%+v", detail{
-		method: r.Method,
-		url:    r.URL.Path,
-		ua:     r.UserAgent(),
-		src:    r.RemoteAddr,
-	})
 }

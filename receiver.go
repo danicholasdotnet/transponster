@@ -11,8 +11,24 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type detail struct {
+	method string
+	url    string
+	ua     string
+	src    string
+}
+
+func (io *IO) requestDetail() string {
+	return fmt.Sprintf("%+v", detail{
+		method: io.R.Method,
+		url:    io.R.URL.Path,
+		ua:     io.R.UserAgent(),
+		src:    io.R.RemoteAddr,
+	})
+}
+
 func (io IO) logIncoming() {
-	log.Printf("INCOMING[%v]: %v\n", io.id, io.R)
+	log.Printf("INCOMING[%v]: %v\n", io.id, io.requestDetail())
 }
 
 func (io IO) RequestToStruct(i interface{}) error {
