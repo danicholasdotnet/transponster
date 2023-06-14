@@ -3,6 +3,7 @@ package transponster
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
@@ -21,6 +22,23 @@ func (io IO) Success(i interface{}) {
 	}
 
 	io.W.Header().Set("Content-Type", "application/json")
+	_, err = io.W.Write(b)
+	if err != nil {
+		io.E500(fmt.Errorf("response writing failed: %v", err))
+		return
+	}
+
+	io.logOutgoing(http.StatusOK)
+}
+
+func (io IO) Image(path string) {
+	b, err := ioutil.ReadFile(path)
+	if err != nil {
+		io.E500(fmt.Errorf("os read of file failed: %v", err))
+		return
+	}
+
+	io.W.Header().Set("Content-Type", "application/octet-stream")
 	_, err = io.W.Write(b)
 	if err != nil {
 		io.E500(fmt.Errorf("response writing failed: %v", err))
